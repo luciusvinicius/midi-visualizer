@@ -1,6 +1,7 @@
 from dataclasses import dataclass
 from visualizer import Visualizer
 import mido
+import numpy as np
 
 NOTES_IDX = {
     0: "G",
@@ -44,7 +45,7 @@ class MidiConverter():
                 case "program_change": continue
                 case "note_on": 
                     print(f"Note ON: {msg.note}")
-                    self.send_note(msg.note)
+                    self.send_msg(msg)
                 case "note_off": 
                     print(f"Note OFF: {msg.note}")
                     # self.send_note(msg.note)
@@ -54,9 +55,10 @@ class MidiConverter():
         TODO: The new note mix its color if other note is pressed. (Pressed_notes array?)
         TODO(2): Apply modifiers like brightness for different octaves."""
         note_str = NOTES_IDX[note % OCTAVE_LENGTH] 
-        return self.color_dict[note_str]
+        return np.array(self.color_dict[note_str])
 
-    def send_note(self, note):
+    def send_msg(self, msg):
         """Gets the converted color and sends the final result to the Visualizer."""
+        note = msg.note
         color = self.convert_note_to_color(note)
-        self.visualizer.change_to_color(color)
+        self.visualizer.change_to_color(color, msg.velocity)
