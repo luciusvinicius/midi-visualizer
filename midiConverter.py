@@ -2,6 +2,22 @@ from dataclasses import dataclass
 from visualizer import Visualizer
 import mido
 
+NOTES_IDX = {
+    0: "G",
+    1: "G#",
+    2: "A",
+    3: "A#",
+    4: "B",
+    5: "C",
+    6: "C#",
+    7: "D",
+    8: "D#",
+    9: "E",
+    10: "F",
+    11: "F#",
+}
+
+OCTAVE_LENGTH = 12
 
 @dataclass
 class MidiConverter():
@@ -19,7 +35,8 @@ class MidiConverter():
         self.play()
     
     def play(self):
-        """Plays the MIDI file and sends the notes to the Visualizer."""
+        """Plays the MIDI file and sends the notes to the Visualizer.
+        TODO(?): Play the song? (having bugs, not sure if my PC is the culprit, just like with shaders)."""
         for msg in self.song.play():
             if msg.is_meta: continue
             
@@ -30,13 +47,14 @@ class MidiConverter():
                     self.send_note(msg.note)
                 case "note_off": 
                     print(f"Note OFF: {msg.note}")
-                    self.send_note(msg.note)
+                    # self.send_note(msg.note)
     
     def convert_note_to_color(self, note):
         """Converts a MIDI note to a RGB color. 
         TODO: The new note mix its color if other note is pressed. (Pressed_notes array?)
-        TODO 2: Link with the color Dictionary."""
-        return (note*2, note*2, note*2)
+        TODO(2): Link with the color Dictionary."""
+        note_str = NOTES_IDX[note % OCTAVE_LENGTH]
+        return self.color_dict[note_str]
 
     def send_note(self, note):
         """Gets the converted color and sends the final result to the Visualizer."""
