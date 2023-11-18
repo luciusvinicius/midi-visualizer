@@ -52,8 +52,8 @@ class MidiConverter():
     def convert_note_to_color(self, note):
         """Converts a MIDI note to a RGB color. 
         TODO: The new note mix its color if other note is pressed. (Pressed_notes array?)
-        TODO(2): Link with the color Dictionary."""
-        note_str = NOTES_IDX[note % OCTAVE_LENGTH]
+        TODO(2): Apply modifiers like brightness for different octaves."""
+        note_str = NOTES_IDX[note % OCTAVE_LENGTH] 
         return self.color_dict[note_str]
 
     def send_note(self, note):
